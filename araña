@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ARAÑA</title>
+        <style>
+            html, body { margin: 0; padding: 0; overflow: hidden; }
+            #info {
+                position: absolute;
+                padding: 10px;
+                width: 100%;
+                text-align: center;
+                color: #000000;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="info">PERSONAJE<br/>
+            Usar Flecha arriba y abajo para trasladar.<br/>
+            Usar Flechas laterales para rotar.<br/>
+        </div>
+    <script src="js/three.min.js"></script>
+    <script>
+		var scene, aspect, camera, renderer;
+		var hips, torso, eye1, eye2, eye3, eye4, eye5, tail, boca, boca2, boca3, boca4, boca5, boca6;
+		var rightFoot, rightFoot2, rightFoot3, rightFoot4, rightLeg, rightc, rightLeg2, rightc2;
+		var leftFoot, leftFoot2, leftFoot3, leftFoot4, leftLeg, leftc, leftLeg2, leftc2;
+                var muslo1, muslo2, muslo3, muslo4, muslo5, muslo6, muslo7, muslo8;
+                var art1, art2, art3, art4, art5, art6, art7, art8;
+		var startTime = Date.now();
+				
+		var upArrow = false;
+		var downArrow = false;
+		var leftArrow = false;
+		var rightArrow = false;
+		var xAxis = true;
+		var yAxis = false;
+		var zAxis = false;
+		
+		var thetaSum=0;
+		var positivo=false;
+		
+		init();
+		animate();
+	
+		function init(){
+			scene = new THREE.Scene();
+			aspect = window.innerWidth / window.innerHeight;
+			camera = new THREE.PerspectiveCamera( 45, aspect, 0.1, 1000);
+			renderer = new THREE.WebGLRenderer();
+                        renderer.setClearColor(0x7A2ECB);
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+				  			
+			//EVENTOS DE TECLADO
+			
+			var onKeyDown = function ( event ) {
+				switch ( event.keyCode ) {
+					case 38: // TRASLADAR ADELANTE
+						upArrow = true;
+						break;
+					case 40: // TRASLADAR ATRÁS
+						downArrow = true;
+						break;
+					case 37: // ROTAR IZQ
+						leftArrow = true;
+						break;
+					case 39: // ROTAR DER
+						rightArrow = true;
+						break;
+				}
+			};	  
+		  			
+			var onKeyUp = function ( event ) {
+				switch ( event.keyCode ) {
+					case 38: // TRASLADAR
+						upArrow = false;
+						break;
+					case 40: // TRASLADAR
+						downArrow = false;
+						break;
+					case 37: // ROTAR IZQ
+						leftArrow = false;
+						break;
+					case 39: // ROTAR DER
+						rightArrow = false;
+						break;
+				}
+			};	  	
+			
+			document.addEventListener( 'keydown', onKeyDown, false );
+			document.addEventListener( 'keyup', onKeyUp, false );
+			
+			//ELEMENTOS DE ESCENA
+							  
+			var size = 56;
+			var arrowSize = 6;
+			var divisions = size;
+			var origin = new THREE.Vector3( 0, 0, 0 );
+			var x = new THREE.Vector3( 1, 0, 0 );
+			var y = new THREE.Vector3( 0, 1, 0 );
+		  	var z = new THREE.Vector3( 0, 0, 1 );
+		  	var colorR = new THREE.Color( 0xAA0000 );
+		  	var colorG = new THREE.Color( 0x00AA00 );
+		  	var colorB = new THREE.Color( 0x0000AA );
+		  
+		  	//CREAR LAS GRILLAS PARA EL ESCENARIO
+		  	var axesHelper1 = new THREE.AxesHelper( size/10 );
+			var axesHelper2 = new THREE.AxesHelper( size/10 );
+			var axesHelper3 = new THREE.AxesHelper( size/10 );
+		  	var gridHelperXY = new THREE.GridHelper( size, divisions, 0xff0000, 0xffff0);
+		  	var gridHelperXZ = new THREE.GridHelper( size, divisions, 0xff0000, 0xffff0);
+		  	var gridHelperYZ = new THREE.GridHelper( size, divisions, 0xff0000, 0xffff0);
+
+            
+            //ROTARLAS PARA QUE QUEDEN EN EL ESPACIO ADECUADO
+            gridHelperXY.rotateOnWorldAxis ( x, THREE.Math.degToRad(90) );
+            gridHelperXZ.rotateOnWorldAxis ( y, THREE.Math.degToRad(90) );
+            gridHelperYZ.rotateOnWorldAxis ( z, THREE.Math.degToRad(90) );
+            
+            //CREAR LAS FLECHAS QUE INDICAN LOS EJES DE COORDENADAS 3D
+            var arrowX = new THREE.ArrowHelper( x, origin, arrowSize, colorR );
+            var arrowY = new THREE.ArrowHelper( y, origin, arrowSize, colorG );
+            var arrowZ = new THREE.ArrowHelper( z, origin, arrowSize, colorB );
+			
+			//CREAR LAS GEOMETRÍAS
+			geometry1 = new THREE.SphereBufferGeometry( .3, 12, 5 );
+			geometry2 = new THREE.CylinderGeometry( .5, .5, 1, 32 );
+			geometry3 = new THREE.ConeGeometry( .8, 2, 9 );
+			geometry4 = new THREE.SphereBufferGeometry( 2.5, 12, 5 );
+			geometry5 = new THREE.CylinderGeometry( .21, .21, 1, 32 );
+			geometry6 = new THREE.SphereBufferGeometry( .4, 12, 5 );
+
+			
+			//CREAR LOS MATERIALES
+			var material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+            		var material2 = new THREE.MeshBasicMaterial( { color: colorB } );
+            		var material3 = new THREE.MeshBasicMaterial( { color: 0xfff00 } );
+            		var material4 = new THREE.MeshBasicMaterial( { color: 0xffffff } );
+            		var material5 = new THREE.MeshBasicMaterial( { color: 0xDDDD0F } );
+
+
+			//CREAR LOS OBJETOS
+			hips = new THREE.Mesh( geometry4, material2 );	
+			torso = new THREE.Mesh( geometry2, material ); 
+                        boca = new THREE.Mesh( geometry2, material5 ); 
+			leftFoot = new THREE.Mesh( geometry3, material3 );	
+			tail = new THREE.Mesh( geometry4, material );
+                        eye1 = new THREE.Mesh( geometry1, material4 );
+                        boca3  = new THREE.Mesh( geometry5, material5 );
+                        art1  = new THREE.Mesh( geometry6, material3 );
+	                
+			hips.applyMatrix( new THREE.Matrix4().makeTranslation(0,2,0) );
+			tail.applyMatrix( new THREE.Matrix4().makeScale(1,1,1.5) );
+
+                        boca4 = boca3.clone();
+                        eye2 = eye1.clone();
+                        eye3 = eye1.clone();
+                        eye4 = eye1.clone();
+                        eye5 = eye1.clone();
+			art2 = art1.clone();
+			art3 = art1.clone();
+			art4 = art1.clone();
+			art5 = art1.clone();
+			art6 = art1.clone();
+			art7 = art1.clone();
+			art8 = art1.clone();
+
+			leftLeg = torso.clone();
+                   	leftFoot2 = leftFoot.clone();		
+                   	leftFoot3 = leftFoot.clone();	
+                   	leftFoot4 = leftFoot.clone();		
+
+			leftLeg.applyMatrix( new THREE.Matrix4().makeScale(.5,2,.5) );
+			boca.applyMatrix( new THREE.Matrix4().makeScale(.5,2,.5) );
+
+			leftc = leftLeg.clone();
+			leftLeg2 = leftLeg.clone();
+			leftc2 = leftLeg.clone();
+			rightLeg = leftLeg.clone();
+			rightc = leftLeg.clone();
+			rightLeg2 = leftLeg.clone();
+			rightc2 = leftLeg.clone();
+			rightFoot = leftFoot.clone();
+			rightFoot2 = leftFoot.clone();
+			rightFoot3 = leftFoot.clone();
+			rightFoot4 = leftFoot.clone();
+			boca2 = boca.clone();
+			boca5 = boca.clone();
+			boca6 = boca.clone();
+			muslo1 = leftLeg.clone();
+			muslo2 = leftLeg.clone();
+			muslo3 = leftLeg.clone();
+			muslo4 = leftLeg.clone();
+			muslo5 = leftLeg.clone();
+			muslo6 = leftLeg.clone();
+			muslo7 = leftLeg.clone();
+			muslo8 = leftLeg.clone();
+
+
+			leftLeg.applyMatrix( new THREE.Matrix4().makeTranslation(0,-1,0) );
+			rightLeg.applyMatrix( new THREE.Matrix4().makeTranslation(0,-1,0) );
+			leftc.applyMatrix( new THREE.Matrix4().makeTranslation(0,-1,0) );
+			rightc.applyMatrix( new THREE.Matrix4().makeTranslation(0,-1,0) );
+			leftLeg2.applyMatrix( new THREE.Matrix4().makeTranslation(0,-1,0) );
+			rightLeg2.applyMatrix( new THREE.Matrix4().makeTranslation(0,-1,0) );
+			leftc2.applyMatrix( new THREE.Matrix4().makeTranslation(0,-1,0) );
+			leftc2.applyMatrix( new THREE.Matrix4().makeScale(0.5,0.7,1) );
+			rightc2.applyMatrix( new THREE.Matrix4().makeTranslation(0,-1,0) );
+			rightc2.applyMatrix( new THREE.Matrix4().makeScale(0.5,0.7,1) );
+
+
+
+			muslo1.applyMatrix( new THREE.Matrix4().makeTranslation(-3,0,1) );
+                        muslo1.rotateZ(90);
+			muslo2.applyMatrix( new THREE.Matrix4().makeTranslation(3,0,-1) );
+                        muslo2.rotateZ(-90);
+			muslo3.applyMatrix( new THREE.Matrix4().makeTranslation(-3,0,-1) );
+                        muslo3.rotateZ(90);
+			muslo4.applyMatrix( new THREE.Matrix4().makeTranslation(3,0,1) );
+                        muslo4.rotateZ(-90);
+			muslo5.applyMatrix( new THREE.Matrix4().makeTranslation(-2.7,0,-1.2) );
+                        muslo5.rotateZ(90);
+			muslo6.applyMatrix( new THREE.Matrix4().makeTranslation(2.7,0,-1.2) );
+                        muslo6.rotateZ(-90);
+			muslo7.applyMatrix( new THREE.Matrix4().makeTranslation( 2.5, -0.5, 2) );
+                        muslo7.rotateX(90);
+                        muslo7.rotateZ(90);
+                        muslo8.applyMatrix( new THREE.Matrix4().makeTranslation( -2.5, -0.5, 2) );
+                        muslo8.rotateX(90);
+                        muslo8.rotateZ(-90);	
+
+
+			art1.applyMatrix( new THREE.Matrix4().makeTranslation(-4,-.5,1) );
+			art2.applyMatrix( new THREE.Matrix4().makeTranslation(4,-.5,-1) );
+			art3.applyMatrix( new THREE.Matrix4().makeTranslation(-4,-.5,-1) );
+			art4.applyMatrix( new THREE.Matrix4().makeTranslation(4,-.5,1) );
+			art5.applyMatrix( new THREE.Matrix4().makeTranslation(-2,-.3,-1.25) );
+			art5.applyMatrix( new THREE.Matrix4().makeScale(2,2,1) );
+			art6.applyMatrix( new THREE.Matrix4().makeTranslation(2,-.3,-1.25) );
+			art6.applyMatrix( new THREE.Matrix4().makeScale(2,2,1) );
+			art7.applyMatrix( new THREE.Matrix4().makeTranslation(3.3,-.7,2.3) );
+			art8.applyMatrix( new THREE.Matrix4().makeTranslation(-3.3,-.7,2.3) );
+
+
+
+			leftFoot.applyMatrix( new THREE.Matrix4().makeTranslation(0,-2,0) );
+			leftFoot.applyMatrix( new THREE.Matrix4().makeScale(1.5,.2,1.5) );
+			rightFoot.applyMatrix( new THREE.Matrix4().makeTranslation(0,-2,0) );
+			rightFoot.applyMatrix( new THREE.Matrix4().makeScale(1.5,.2,1.5) );  
+			leftFoot2.applyMatrix( new THREE.Matrix4().makeTranslation(0,-2,0) );
+			leftFoot2.applyMatrix( new THREE.Matrix4().makeScale(1.5,.2,1.5) );
+			rightFoot2.applyMatrix( new THREE.Matrix4().makeTranslation(0,-2,0) );
+			rightFoot2.applyMatrix( new THREE.Matrix4().makeScale(1.5,.2,1.5) );
+			leftFoot3.applyMatrix( new THREE.Matrix4().makeTranslation(0,-2,0) );
+			leftFoot3.applyMatrix( new THREE.Matrix4().makeScale(1.5,.2,1.5) );
+			rightFoot3.applyMatrix( new THREE.Matrix4().makeTranslation(0,-2,0) );
+			rightFoot3.applyMatrix( new THREE.Matrix4().makeScale(1.5,.2,1.5) );  
+			leftFoot4.applyMatrix( new THREE.Matrix4().makeTranslation(0,-2,0) );
+			leftFoot4.applyMatrix( new THREE.Matrix4().makeScale(1.5,.2,1.5) );
+			rightFoot4.applyMatrix( new THREE.Matrix4().makeTranslation(0,-2,0) );
+			rightFoot4.applyMatrix( new THREE.Matrix4().makeScale(1.5,.2,1.5) );  
+
+			rightc2.applyMatrix( new THREE.Matrix4().makeScale(1,1,0.6) );
+			leftc2.applyMatrix( new THREE.Matrix4().makeScale(1,1,0.6) );                      
+			
+			torso.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 1, 0) );
+			tail.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 1, -4) );
+			eye1.applyMatrix( new THREE.Matrix4().makeTranslation( .5, 0.5, 2.2) );
+			eye2.applyMatrix( new THREE.Matrix4().makeTranslation( -.5, 0.5, 2.2) );
+			eye3.applyMatrix( new THREE.Matrix4().makeTranslation( .7, .1, 5) );
+			eye3.applyMatrix( new THREE.Matrix4().makeScale( .5, .5, .5) );
+			eye4.applyMatrix( new THREE.Matrix4().makeTranslation( 0, .05, 5) );
+			eye4.applyMatrix( new THREE.Matrix4().makeScale( .5, .5, .5) );
+			eye5.applyMatrix( new THREE.Matrix4().makeTranslation( -.7, .1, 5) );
+			eye5.applyMatrix( new THREE.Matrix4().makeScale( .5, .5, .5) );
+			boca.applyMatrix( new THREE.Matrix4().makeTranslation( 1.5, 0, 2.2) );
+                        boca.rotateX(90);
+			boca2.applyMatrix( new THREE.Matrix4().makeTranslation( -1.5, 0, 2.2) );
+                        boca2.rotateX(90);
+			boca3.applyMatrix( new THREE.Matrix4().makeTranslation( -1, -0.5, 3.3) );
+                        boca3.rotateX(90);
+                        boca3.rotateZ(90);
+                        boca4.applyMatrix( new THREE.Matrix4().makeTranslation( 1, -0.5, 3.3) );
+                        boca4.rotateX(90);
+                        boca4.rotateZ(-90);
+			boca5.applyMatrix( new THREE.Matrix4().makeTranslation( .3, -.2, 1.8) );
+                        boca5.rotateX(90);
+			boca6.applyMatrix( new THREE.Matrix4().makeTranslation( -.3, -.2, 1.8) );
+                        boca6.rotateX(90);			
+
+
+			hips.add(tail);
+			hips.add(eye1);
+			hips.add(eye2);
+			hips.add(eye3);
+			hips.add(eye4);
+			hips.add(eye5);
+			hips.add(boca);
+			hips.add(boca2);
+			hips.add(boca3);
+			hips.add(boca4);
+			hips.add(boca5);
+			hips.add(boca6);
+			hips.add(art1);
+			hips.add(art2);
+			hips.add(art3);
+			hips.add(art4);
+			tail.add(art5);
+			tail.add(art6);
+			hips.add(art7);
+			hips.add(art8);
+			art1.add(leftLeg);
+			art2.add(rightLeg);
+			art3.add(rightc);
+			art4.add(leftc);
+			hips.add(muslo1);
+			hips.add(muslo2);
+			hips.add(muslo3);
+			hips.add(muslo4);
+			tail.add(muslo5);
+			tail.add(muslo6);
+			hips.add(muslo7);
+			hips.add(muslo8);
+			art7.add(leftLeg2);
+			art8.add(rightLeg2);
+			art5.add(rightc2);
+			art6.add(leftc2);
+			leftLeg.add(leftFoot);
+                        rightLeg.add(rightFoot);
+			leftc.add(leftFoot2);
+                        rightc.add(rightFoot2);
+			leftLeg2.add(leftFoot3);
+                        rightLeg2.add(rightFoot3);
+			hips.add(muslo4);
+			leftc2.add(leftFoot4);
+                        rightc2.add(rightFoot4);
+		
+		  	//AGREGAR A LA ESCENA
+                        scene.add( gridHelperXZ );
+		  	scene.add( arrowX );	
+		  	scene.add( arrowY );	
+		  	scene.add( arrowZ );	
+			scene.add( hips );
+			
+			//MOVER LA CAMARA
+			camera.position.x = 10;
+			camera.position.y = 3;	 
+		  	camera.position.z = 10;			
+		  	camera.lookAt( origin );
+			
+			renderer.render( scene, camera );
+			}
+    
+    function animate() {
+        render();
+        requestAnimationFrame( animate );
+    }
+    
+    function render(){
+        var dtime = Date.now()-startTime;
+		var tx=0, ty=0, tz=0;	//Variables para traslacion
+		var sc = 1;		        //Variable para escala
+		var theta=0;			//Variable para ángulo de rotacion de piernas
+		var sigma=0;			//Variable para ángulo de rotación de caderas
+		
+		if(thetaSum>=30*Math.PI/180)
+			positivo = false;
+		if(thetaSum<=-30*Math.PI/180)
+			positivo = true;
+		
+		if(upArrow) {
+			tx=0; ty=0; tz=.1;
+			if(positivo)
+				theta = .1;
+			else
+				theta = -.1;
+		}
+		if(downArrow) {
+			tx=0; ty=0; tz=-.1;
+			if(positivo)
+				theta = .1;
+			else
+				theta = -.1;
+		}
+		thetaSum+=theta;
+		
+		if(rightArrow)
+			sigma = -.1;
+		if(leftArrow)
+			sigma = .1;
+		
+		//MATRIZ DE TRASLACIÓN
+		var t = new THREE.Matrix4();
+		t.set( 	1, 0, 0, tx,
+				0, 1, 0, ty, 
+				0, 0, 1, tz,
+				0, 0, 0, 1	);
+		
+		hips.matrix.multiply(t); 	//APLICAR LA TRASLACIÓN A NIVEL LOCAL
+		
+		//ROTACIONES
+		var ct1 = Math.cos(theta);
+		var ct2 = Math.cos(-theta);
+		var cs = Math.cos(sigma);
+		var st1 = Math.sin(theta);
+		var st2 = Math.sin(-theta);
+		var ss = Math.sin(sigma);
+		var r = new THREE.Matrix4();
+		var r1 = new THREE.Matrix4();
+		var r2 = new THREE.Matrix4();
+
+		//MATRIZ DE ROTACIÓN EN EJE Y
+		r.set( 	   cs,  0, ss, 0,
+					0,  1,  0, 0, 
+				  -ss,  0, cs, 0,
+					0,  0,  0, 1 );	
+		//MATRICES DE ROTACIÓN EN EJE LOCAL DE PIERNAS	
+		r1.set( 	1,  0,  0, 0,
+					0, ct1,-st1, 0, 
+					0, st1, ct1, 0,
+					0,  0,  0, 1 );	
+		r2.set( 	1,  0,  0, 0,
+					0, ct2,-st2, 0, 
+					0, st2, ct2, 0,
+					0,  0,  0, 1 );							
+		
+		//ROTACION EN UN EJE PARALELO
+		var tempMatrix = new THREE.Matrix4();
+		tempMatrix.copyPosition( hips.matrix );
+		hips.applyMatrix( new THREE.Matrix4().getInverse(tempMatrix) );
+		hips.applyMatrix(r);
+		hips.applyMatrix( tempMatrix );
+
+		leftLeg.applyMatrix(r1); //primera der
+		rightLeg.applyMatrix(r1); //segunda izq
+		leftc.applyMatrix(r2); //primera izq
+		rightc.applyMatrix(r2); //segunda der
+		leftLeg2.applyMatrix(r1); // delante izq
+		rightLeg2.applyMatrix(r2); // delante der
+		leftc2.applyMatrix(r1); //atras izq
+		rightc2.applyMatrix(r2); //atras der
+				
+        camera.position.y = 30;
+        camera.position.x = 30;
+        camera.position.z = 30;
+        camera.lookAt( 0, 0, 0 );
+        renderer.render( scene, camera );
+    }
+    </script>
+  </body>
+</html>
