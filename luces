@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>luces</title>
+    <style>
+      html, body { margin: 0; padding: 0; overflow: hidden; }
+    </style>
+  </head>
+  <body>
+  	<script src="js/three.js"></script>
+  	<script src="js/controls/OrbitControls.js"></script>
+  	<script src="js/csg.js"></script>
+  	<script src="js/THREE.CSG.js"></script>
+  	<script src="js/WebGL.js"></script>
+  	<script>
+
+		  if (WEBGL.isWebGLAvailable() === false) {
+
+			  document.body.appendChild(WEBGL.getWebGLErrorMessage());
+
+		  }
+
+		var scene, aspect, camera, renderer, controls;
+
+
+		  init();
+		  animate();
+		  function init() {
+
+			  if (WEBGL.isWebGLAvailable() === false) {
+				  document.body.appendChild(WEBGL.getWebGLErrorMessage());
+			  }
+
+			  //INICIALIZACIÓN
+			  scene = new THREE.Scene();
+			  renderer = new THREE.WebGLRenderer({ antialias: true });
+			  aspect = window.innerWidth / window.innerHeight;
+			  camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
+			  renderer = new THREE.WebGLRenderer();
+			  renderer.setClearColor(0x000000);
+			  renderer.setSize(window.innerWidth, window.innerHeight);
+			  document.body.appendChild(renderer.domElement);
+			  controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+
+
+
+			  //ELEMENTOS COMUNES
+			  var size = 10;
+			  var arrowSize = 1;
+			  var divisions = size;
+			  var origin = new THREE.Vector3(0, 0, 0);
+			  var x = new THREE.Vector3(1, 0, 0);
+			  var y = new THREE.Vector3(0, 1, 0);
+			  var z = new THREE.Vector3(0, 0, 1);
+			  var color = new THREE.Color(0x333333);
+			  var colorR = new THREE.Color(0xAA3333);
+			  var colorG = new THREE.Color(0x33AA33);
+			  var colorB = new THREE.Color(0x001EA7);
+
+			  //CREAR LAS GRILLAS PARA EL ESCENARIO
+			  var axesHelper = new THREE.AxesHelper(size);
+			  //scene.add( axesHelper );
+
+			  var gridHelperXZ = new THREE.GridHelper(size, divisions, color, color);
+			  scene.add(gridHelperXZ);
+
+			  //ROTARLAS PARA QUE QUEDEN EN EL ESPACIO ADECUADO
+			  gridHelperXZ.rotateOnWorldAxis(y, THREE.Math.degToRad(90));
+
+
+			  //AMBIENT
+
+			  var ambient = new THREE.AmbientLight(0x2C2B2B, 0.7);
+			  scene.add(ambient);
+
+
+			  //POINTLIGHT
+
+			  //         var pointLight = new THREE.PointLight(0xffffff, 1.2, 100);
+			  //         pointLight.position.set(3, 5, -4);
+			  //         scene.add(pointLight);
+
+			  //         var sphereSize = 0.2;
+			  //         var pointLightHelper = new THREE.PointLightHelper(pointLight, sphereSize);
+			  //scene.add(pointLightHelper);
+
+
+			  //HEMISPHERE
+
+			  //         var light = new THREE.HemisphereLight(0xffffff, 0xfffffff, 1);
+			  //var helper = new THREE.HemisphereLightHelper(light, 2);
+
+			  //light.position.y = 5;
+
+			  //scene.add(helper);
+			  //scene.add(light);
+
+			  //SPOTLIGHT
+
+			  //         var spotLight = new THREE.SpotLight(0x121212);
+			  //spotLight.position.set(-18, 6, 5);
+			  //scene.add(spotLight);
+
+
+
+			  //         var spotLightHelper = new THREE.SpotLightHelper(spotLight);
+			  //scene.add(spotLightHelper);
+
+
+			  //         var spotLight2 = new THREE.SpotLight(0x121212);
+			  //spotLight2.position.set(-18, 6, -5);
+			  //         scene.add(spotLight2);
+
+			  //         var spotLightHelper2 = new THREE.SpotLightHelper(spotLight2);
+			  //         scene.add(spotLightHelper2);
+
+
+			  //POINTLIGHT
+
+			  var pointLight = new THREE.PointLight(0xBEBEBE, 1.5, 35);
+			  pointLight.position.set(90, 24, -35);
+			  scene.add(pointLight);
+
+			  var sphereSize = 1;
+			  var pointLightHelper = new THREE.PointLightHelper(pointLight, sphereSize);
+			  //scene.add(pointLightHelper);
+
+
+			  var pointLight2 = new THREE.PointLight(0xBEBEBE, 1.5, 35);
+			  pointLight2.position.set(30, 24, -35);
+			  scene.add(pointLight2);
+
+			  var pointLightHelper2 = new THREE.PointLightHelper(pointLight2, sphereSize);
+			  //scene.add(pointLightHelper2);
+
+
+			  var pointLight3 = new THREE.PointLight(0xBEBEBE, 1.5, 35);
+			  pointLight3.position.set(150, 24, -35);
+			  scene.add(pointLight3);
+
+			  var pointLightHelper3 = new THREE.PointLightHelper(pointLight3, sphereSize);
+			  //scene.add(pointLightHelper3);
+
+
+			  var pointLight4 = new THREE.PointLight(0xBEBEBE, 1.5, 35);
+			  pointLight4.position.set(-30, 24, -35);
+			  scene.add(pointLight4);
+
+
+			  //DIRECTIONAL
+
+			  //var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+			  //scene.add(directionalLight);
+
+
+
+			  //CREAR LAS GEOMETRÍAS
+			  var boxGeometry = new THREE.BoxGeometry(250, 4, 250);
+			  var boxGeometry2 = new THREE.BoxGeometry(15, 4.2, 3);
+			  var boxGeometry3 = new THREE.BoxGeometry(6, 12, 3);
+			  var boxGeometry4 = new THREE.BoxGeometry(20, 10, 14);
+			  var boxGeometry5 = new THREE.BoxGeometry(4, 5, 2);
+			  var geometry = new THREE.SphereGeometry(1.5, 32, 32);
+			  var geometry2 = new THREE.CylinderGeometry(0.9, 0.9, 4, 32);
+			  var geometry3 = new THREE.CylinderGeometry(0.9, 0.9, 1, 32);
+			  var geometry4 = new THREE.CylinderGeometry(0.5, 0.5, 1, 32);
+
+
+			  var Cemento = new THREE.TextureLoader().load('Texturas/ColorMap.png');
+			  var CementoNormal = new THREE.TextureLoader().load('Texturas/NormalMap.png');
+              var Tierra = new THREE.TextureLoader().load('Texturas/ColorTierra.png');
+			  var TierraNormal = new THREE.TextureLoader().load('Texturas/NormalTierra.png');
+              var Tela = new THREE.TextureLoader().load('Texturas/ColorTela.png');
+			  var TelaNormal = new THREE.TextureLoader().load('Texturas/NormalTela.png');
+              var Carro = new THREE.TextureLoader().load('Texturas/ColorCarro.jpg');
+              var CarroNormal = new THREE.TextureLoader().load('Texturas/NormalCarro.png');
+
+
+			  var CementoMaterial = new THREE.MeshStandardMaterial({
+				  color: 0xffffff,
+                  metalness: 0.4,
+				  map: Cemento,
+				  normalMap: CementoNormal
+			  });
+
+              var TierraMaterial = new THREE.MeshStandardMaterial({
+                  color: 0xFFF790,
+				  metalness: 0,
+				  map: Tierra,
+                  normalMap: TierraNormal
+			  });
+
+              var TelaMaterial = new THREE.MeshStandardMaterial({
+                  color: 0xffffff,
+                  metalness: 0,
+                  map: Tela,
+                  normalMap: TelaNormal
+			  });
+
+              var CarroMaterial = new THREE.MeshStandardMaterial({
+                  color: 0xffffff,
+				  metalness: 0,
+				  map: Carro,
+                  normalMap: CarroNormal
+              });
+
+
+			  //CREAR LOS MATERIALES
+			  var material1 = new THREE.MeshStandardMaterial({ color: 0XFFD0B5, metalness: 0.4, roughness: 0.3, transparent: true, opacity: 1 });
+			  var material5 = new THREE.MeshStandardMaterial({ color: 0xFEFE2B, metalness: 0.5, roughness: 0.9, /*transparent: true, opacity: 0.5*/ });
+			  var material6 = new THREE.MeshStandardMaterial({ color: 0x00FFF3, metalness: 0.4, roughness: 0.3 });
+			  var material7 = new THREE.MeshBasicMaterial({ color: 0xffffff });
+			  var material8 = new THREE.MeshStandardMaterial({ color: 0x3A3D3D, metalness: 0 });
+			  var material9 = new THREE.MeshBasicMaterial({ color: 0xE5AD3E });
+
+
+
+			  //CREAR LAS MALLAS
+			  var cube = new THREE.Mesh(boxGeometry, CementoMaterial);
+			  var cube2 = new THREE.Mesh(boxGeometry, TierraMaterial);
+			  var cube3 = new THREE.Mesh(boxGeometry, TierraMaterial);
+			  var cube4 = new THREE.Mesh(boxGeometry2, material5);
+			  var cube5 = new THREE.Mesh(boxGeometry2, material5);
+			  var cube6 = new THREE.Mesh(boxGeometry2, material5);
+			  var cube7 = new THREE.Mesh(boxGeometry2, material5);
+			  var cube8 = new THREE.Mesh(boxGeometry2, material5);
+			  var cube9 = new THREE.Mesh(boxGeometry2, material5);
+			  var cube10 = new THREE.Mesh(boxGeometry3, TelaMaterial);
+			  var cube11 = new THREE.Mesh(boxGeometry4, CarroMaterial);
+			  var cube12 = new THREE.Mesh(boxGeometry4, CarroMaterial);
+			  var cube13 = new THREE.Mesh(boxGeometry5, TelaMaterial);
+			  var cube14 = new THREE.Mesh(boxGeometry5, TelaMaterial);
+
+			  cube.position.x = 30;
+
+			  cube2.position.x = 30;
+			  cube2.position.z = -20;
+              cube2.position.y = -10;
+			  cube2.rotateX(0.349);
+
+			  cube3.position.x = 30;
+			  cube3.position.z = 20;
+              cube3.position.y = -10;
+			  cube3.rotateX(-0.349);
+
+			  cube5.position.x = 22;
+			  cube6.position.x = -22;
+			  cube7.position.x = 44;
+			  cube8.position.x = 66;
+			  cube9.position.x = 88;
+
+			  cube10.position.x = 150;
+			  cube10.position.y = 8;
+			  cube10.position.z = -25;
+			  cube10.rotateY(-0.785);
+
+
+			  cube11.position.x = 15;
+			  cube11.position.y = 3;
+			  cube11.position.z = 5;
+
+			  cube12.position.x = 15;
+			  cube12.position.y = 3;
+			  cube12.position.z = -21;
+			  cube12.rotateY(-0.785);
+
+
+			  cube13.position.x = 148;
+			  cube13.position.y = 10;
+			  cube13.position.z = -27;
+			  cube13.rotateY(-0.785);
+
+
+			  cube14.position.x = 152;
+			  cube14.position.y = 10;
+			  cube14.position.z = -23;
+			  cube14.rotateY(-0.785);
+
+
+			  var sphere = new THREE.Mesh(geometry, material1);
+			  sphere.position.y = 16;
+			  sphere.position.x = 150;
+			  sphere.position.z = -25;
+
+
+			  var cilindro = new THREE.Mesh(geometry2, material1);
+			  var cilindro2 = new THREE.Mesh(geometry3, material7);
+			  var cilindro3 = new THREE.Mesh(geometry3, material7);
+
+			  var cilindro4 = new THREE.Mesh(geometry3, material7);
+			  var cilindro5 = new THREE.Mesh(geometry3, material7);
+			  var cilindro6 = new THREE.Mesh(geometry3, material7);
+			  var cilindro7 = new THREE.Mesh(geometry3, material7);
+
+			  var cilindro8 = new THREE.Mesh(geometry4, material9);
+			  var cilindro9 = new THREE.Mesh(geometry4, material9);
+			  var cilindro10 = new THREE.Mesh(geometry4, material9);
+			  var cilindro11 = new THREE.Mesh(geometry4, material9);
+
+			  cilindro.position.y = 14;
+			  cilindro.position.x = 150;
+			  cilindro.position.z = -25;
+
+			  cilindro2.position.y = 5;
+			  cilindro2.position.x = 26;
+			  cilindro2.position.z = 10;
+			  cilindro2.rotateZ(1.57);
+
+
+			  cilindro3.position.y = 5;
+			  cilindro3.position.x = 26;
+			  cilindro3.position.z = 0;
+			  cilindro3.rotateZ(1.57);
+
+
+			  cilindro4.position.y = 5;
+			  cilindro4.position.x = 20;
+			  cilindro4.position.z = -9;
+			  cilindro4.rotateZ(1.57);
+			  cilindro4.rotateX(-0.78);
+			  cilindro5.position.y = 5;
+			  cilindro5.position.x = 21;
+			  cilindro5.position.z = -10;
+			  cilindro5.rotateZ(1.57);
+			  cilindro5.rotateX(-0.78);
+
+
+			  cilindro6.position.y = 5;
+			  cilindro6.position.x = 26;
+			  cilindro6.position.z = -17;
+			  cilindro6.rotateZ(1.57);
+			  cilindro6.rotateX(-0.78);
+			  cilindro7.position.y = 5;
+			  cilindro7.position.x = 27;
+			  cilindro7.position.z = -18;
+			  cilindro7.rotateZ(1.57);
+			  cilindro7.rotateX(-0.78);
+
+
+			  cilindro8.position.y = 3;
+			  cilindro8.position.x = 26;
+			  cilindro8.position.z = 7;
+			  cilindro8.rotateZ(1.57);
+
+
+			  cilindro9.position.y = 3;
+			  cilindro9.position.x = 26;
+			  cilindro9.position.z = 3;
+			  cilindro9.rotateZ(1.57);
+
+
+
+			  cilindro10.position.y = 3.5;
+			  cilindro10.position.x = 20.5;
+			  cilindro10.position.z = -9.5;
+			  cilindro10.rotateZ(1.57);
+			  cilindro10.rotateX(-0.78);
+
+
+			  cilindro11.position.y = 3.5;
+			  cilindro11.position.x = 26.5;
+			  cilindro11.position.z = -17.5;
+			  cilindro11.rotateZ(1.57);
+			  cilindro11.rotateX(-0.78);
+
+			  scene.add(sphere);
+			  scene.add(cilindro);
+			  scene.add(cilindro2);
+			  scene.add(cilindro3);
+			  scene.add(cilindro4);
+			  scene.add(cilindro5);
+			  scene.add(cilindro6);
+			  scene.add(cilindro7);
+			  scene.add(cilindro8);
+			  scene.add(cilindro9);
+			  scene.add(cilindro10);
+			  scene.add(cilindro11);
+
+
+			  //AGREGAR A LA ESCENA LOS DIFERENTES ELEMENTOS
+			  scene.add(cube);
+			  scene.add(cube2);
+			  scene.add(cube3);
+			  //scene.add(cube4);
+			  //scene.add(cube5);
+			  //scene.add(cube6);
+			  //scene.add(cube7);
+			  //scene.add(cube8);
+			  //scene.add(cube9);
+			  scene.add(cube10);
+			  scene.add(cube11);
+			  scene.add(cube12);
+			  scene.add(cube13);
+			  scene.add(cube14);
+
+			  camera.position.x = 160;
+			  camera.position.y = 16;
+              camera.position.z = -21;
+			  camera.lookAt(origin);
+
+		  }
+		  function animate() {
+			  requestAnimationFrame(animate);
+			  controls.update();
+			  render();
+		  }
+		function render() {
+			  renderer.render(scene, camera);
+		  }
+  	</script>
+  </body>
+</html>
