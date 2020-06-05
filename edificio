@@ -1,0 +1,450 @@
+<html><head>
+		<title>EDIFICIO</title>
+		<style>
+			html,body { margin: 0; padding: 0; overflow: hidden;}
+		</style>
+	</head>
+	<body>
+		<script src="js/three.js"></script>
+		<script>
+                        
+            var scene, aspect, camera, renderer;    
+            var startTime = Date.now();
+
+           
+
+            init();
+            animate();
+
+
+            function init() {
+                scene = new THREE.Scene();
+                aspect = window.innerWidth / window.innerHeight
+                camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
+                renderer = new THREE.WebGLRenderer();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                document.body.appendChild(renderer.domElement);
+                     
+                        var size = 50;
+                        var divisions = 50;
+                        var origin = new THREE.Vector3( 0, 0, 0 );
+                        var x = new THREE.Vector3( 1, 0, 0 );
+                        var y = new THREE.Vector3( 0, 1, 0 );
+                        var z = new THREE.Vector3( 0, 0, 1 );
+			
+//hacer plano con cuadricula
+
+                        var axesHelper = new THREE.AxesHelper( size );
+                        var gridHelperXY = new THREE.GridHelper( size, divisions );
+                        var gridHelperXZ = new THREE.GridHelper( size, divisions , 0xfff000 , 0xffff0);
+                        var gridHelperYZ = new THREE.GridHelper( size, divisions );
+
+                        gridHelperXY.rotateOnWorldAxis ( x, THREE.Math.degToRad(90) );
+                        gridHelperXZ.rotateOnWorldAxis ( y, THREE.Math.degToRad(90) );
+                        gridHelperYZ.rotateOnWorldAxis ( z, THREE.Math.degToRad(90) );
+                    
+//EDIFICIO                      
+                      var Columnas = new THREE.Geometry();
+                      var zTemp = 0;
+                      var segmentos = 100.0;
+                      for( var i = 0; i < segmentos; i++){
+                          for( var j = 0; j < segmentos; j++){
+                              var punto = new THREE.Vector3();
+                              punto.x = 0.5 * Math.cos( ( j * 2 * Math.PI)/segmentos);
+                              punto.y = 10 * i / segmentos;
+                              punto.z = 0.5 * Math.sin( ( j * 2 * Math.PI)/segmentos);
+                              Columnas.vertices.push( punto );
+                          }
+                      }
+
+                      var matLinea = new THREE.LineBasicMaterial( { color: 0xffffff } );
+                      var cilindro1 = new THREE.Line( Columnas, matLinea);
+                      var cilindro2 = new THREE.Line( Columnas, matLinea);
+                      var cilindro3 = new THREE.Line( Columnas, matLinea);
+                      var cilindro4 = new THREE.Line( Columnas, matLinea);
+                      cilindro1.position.x = 20;
+                      cilindro1.position.z = 2;
+                      cilindro2.position.x = 16;
+                      cilindro2.position.z = -2;
+                      cilindro3.position.x = 20;
+                      cilindro3.position.z = -2;
+                      cilindro4.position.x = 16;
+                      cilindro4.position.z = 2;
+ 
+                      var Columnas2 = new THREE.Geometry();
+                      for( var i = 0; i < segmentos; i++){
+                          for( var j = 0; j < segmentos; j++){
+                              var punto2 = new THREE.Vector3();
+                              punto2.x = 0.5 * Math.cos( ( j * 2 * Math.PI)/segmentos);
+                              punto2.y = 6 * i / segmentos;
+                              punto2.z = 0.5 * Math.sin( ( j * 2 * Math.PI)/segmentos);
+                              Columnas2.vertices.push( punto2 );
+                          }
+                      }
+
+                      var matLinea2 = new THREE.LineBasicMaterial( { color: 0xffffff } );
+                      var cilindro5 = new THREE.Line( Columnas2, matLinea2);
+                      var cilindro6 = new THREE.Line( Columnas2, matLinea2);
+                      var cilindro7 = new THREE.Line( Columnas2, matLinea2);
+                      var cilindro8 = new THREE.Line( Columnas2, matLinea2);
+                      var cilindro9 = new THREE.Line( Columnas2, matLinea2);
+                      var cilindro10 = new THREE.Line( Columnas2, matLinea2);
+                      var cilindro11 = new THREE.Line( Columnas2, matLinea2);
+                      var cilindro12 = new THREE.Line( Columnas2, matLinea2);
+                      var cilindro13 = new THREE.Line( Columnas2, matLinea2);
+                      var cilindro14 = new THREE.Line( Columnas2, matLinea2);
+                      var cilindro15 = new THREE.Line( Columnas2, matLinea2);
+                      var cilindro16 = new THREE.Line( Columnas2, matLinea2);
+                      var cilindro17 = new THREE.Line( Columnas2, matLinea2);
+                      var cilindro18 = new THREE.Line( Columnas2, matLinea2);
+                      var cilindro19 = new THREE.Line( Columnas2, matLinea2);
+                      var cilindro20 = new THREE.Line( Columnas2, matLinea2);
+                      cilindro5.position.x = 20;
+                      cilindro5.position.z = 18;
+                      cilindro6.position.x = 16;
+                      cilindro6.position.z = 18;
+                      cilindro7.position.x = 20;
+                      cilindro7.position.z = 14;
+                      cilindro8.position.x = 16;
+                      cilindro8.position.z = 14;
+                      cilindro9.position.x = 20;
+                      cilindro9.position.z = -18;
+                      cilindro10.position.x = 16;
+                      cilindro10.position.z = -18;
+                      cilindro11.position.x = 20;
+                      cilindro11.position.z = -14;
+                      cilindro12.position.x = 16;
+                      cilindro12.position.z = -14;
+                      cilindro13.position.x = -20;
+                      cilindro13.position.z = 18;
+                      cilindro14.position.x = -16;
+                      cilindro14.position.z = 18;
+                      cilindro15.position.x = -20;
+                      cilindro15.position.z = 14;
+                      cilindro16.position.x = -16;
+                      cilindro16.position.z = 14;
+                      cilindro17.position.x = -20;
+                      cilindro17.position.z = -18;
+                      cilindro18.position.x = -16;
+                      cilindro18.position.z = -18;
+                      cilindro19.position.x = -20;
+                      cilindro19.position.z = -14;
+                      cilindro20.position.x = -16;
+                      cilindro20.position.z = -14;
+
+                      var geoCono = new THREE.Geometry();
+                      var zTemp = 0;
+                      var seg = 30.0;
+                      for( var i = 0; i < seg; i++){
+                          for( var j = 0; j < seg; j++){
+                              var punto = new THREE.Vector3();
+                              punto.x = (0.5 * (seg - i) / seg) * Math.cos( ( j * 2 * Math.PI)/seg);
+                              punto.y = 2 * i / seg;
+                              punto.z = (0.5 * (seg - i) / seg) * Math.sin( ( j * 2 * Math.PI)/seg);
+                              geoCono.vertices.push( punto );
+                          }
+                      }
+                      
+                      var matLine = new THREE.LineBasicMaterial( { color: 0xffffff } );
+                      var cono = new THREE.Line( geoCono, matLine); 
+                      var cono2 = new THREE.Line( geoCono, matLine); 
+                      var cono3 = new THREE.Line( geoCono, matLine); 
+                      var cono4 = new THREE.Line( geoCono, matLine);
+                      var cono5 = new THREE.Line( geoCono, matLine); 
+                      var cono6 = new THREE.Line( geoCono, matLine); 
+                      var cono7 = new THREE.Line( geoCono, matLine); 
+                      var cono8 = new THREE.Line( geoCono, matLine);  
+                      var cono9 = new THREE.Line( geoCono, matLine); 
+                      var cono10 = new THREE.Line( geoCono, matLine); 
+                      var cono11 = new THREE.Line( geoCono, matLine); 
+                      var cono12 = new THREE.Line( geoCono, matLine);  
+                      var cono13 = new THREE.Line( geoCono, matLine); 
+                      var cono14 = new THREE.Line( geoCono, matLine); 
+                      var cono15 = new THREE.Line( geoCono, matLine); 
+                      var cono16 = new THREE.Line( geoCono, matLine);  
+                      var cono17 = new THREE.Line( geoCono, matLine); 
+                      var cono18 = new THREE.Line( geoCono, matLine); 
+                      var cono19 = new THREE.Line( geoCono, matLine); 
+                      var cono20 = new THREE.Line( geoCono, matLine); 
+                      cono.position.y = 10;
+                      cono.position.x = 20;
+                      cono.position.z = 2;
+                      cono2.position.y = 10;
+                      cono2.position.x = 16;
+                      cono2.position.z = -2;
+                      cono3.position.y = 10;
+                      cono3.position.x = 20;
+                      cono3.position.z = -2;
+                      cono4.position.y = 10;
+                      cono4.position.x = 16;
+                      cono4.position.z = 2;
+                      cono5.position.y = 6;
+                      cono5.position.x = 20;
+                      cono5.position.z = 18;
+                      cono6.position.y = 6;
+                      cono6.position.x = 16;
+                      cono6.position.z = 18;
+                      cono7.position.y = 6;
+                      cono7.position.x = 20;
+                      cono7.position.z = 14;
+                      cono8.position.y = 6;
+                      cono8.position.x = 16;
+                      cono8.position.z = 14;
+                      cono9.position.y = 6;
+                      cono9.position.x = 20;
+                      cono9.position.z = -18;
+                      cono10.position.y = 6;
+                      cono10.position.x = 16;
+                      cono10.position.z = -18;
+                      cono11.position.y = 6;
+                      cono11.position.x = 20;
+                      cono11.position.z = -14;
+                      cono12.position.y = 6;
+                      cono12.position.x = 16;
+                      cono12.position.z = -14;
+                      cono13.position.y = 6;
+                      cono13.position.x = -20;
+                      cono13.position.z = 18;
+                      cono14.position.y = 6;
+                      cono14.position.x = -16;
+                      cono14.position.z = 18;
+                      cono15.position.y = 6;
+                      cono15.position.x = -20;
+                      cono15.position.z = 14;
+                      cono16.position.y = 6;
+                      cono16.position.x = -16;
+                      cono16.position.z = 14;
+                      cono17.position.y = 6;
+                      cono17.position.x = -20;
+                      cono17.position.z = -18;
+                      cono18.position.y = 6;
+                      cono18.position.x = -16;
+                      cono18.position.z = -18;
+                      cono19.position.y = 6;
+                      cono19.position.x = -20;
+                      cono19.position.z = -14;
+                      cono20.position.y = 6;
+                      cono20.position.x = -16;
+                      cono20.position.z = -14;
+
+
+
+
+
+                      
+  
+                      var geometry = new THREE.BoxBufferGeometry( 4, 10, 3 );
+                      var geometry6 = new THREE.BoxBufferGeometry( 5, 12, 5 );
+                      var geometry7 = new THREE.BoxBufferGeometry( 3.5, 2.5, 3.5 );
+                      var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+                      var material2 = new THREE.MeshBasicMaterial( {color: 0x62D963} );
+                      var cube = new THREE.Mesh( geometry, material );
+                      var cube21 = new THREE.Mesh( geometry6, material2 );
+                      var cube22 = new THREE.Mesh( geometry7, material2 );
+                      cube.position.x = 18;
+                      cube.position.y = 5;
+                      cube21.position.x = -22;
+                      cube21.position.y = 6;
+                      cube22.position.x = -22;
+                      cube22.position.y = 12;
+
+
+
+                      var geometry2 = new THREE.BoxBufferGeometry( 4, 4, 15 );
+                      var material = new THREE.MeshBasicMaterial( {color: 0xffff0} );
+                      var cube2 = new THREE.Mesh( geometry2, material );
+                      var cube5 = new THREE.Mesh( geometry2, material );
+                      var cube6 = new THREE.Mesh( geometry2, material );
+                      var cube7 = new THREE.Mesh( geometry2, material );
+                      var cube17 = new THREE.Mesh( geometry2, material );
+                      var cube18 = new THREE.Mesh( geometry2, material );
+                      cube2.position.x = 18;
+                      cube2.position.z = 8;
+                      cube2.position.y = 2;
+                      cube5.position.y = 2;
+                      cube5.position.z = 8;
+                      cube6.position.y = 2;
+                      cube6.position.z = -8;
+                      cube7.position.x = 18;
+                      cube7.position.y = 2;
+                      cube7.position.z = -8;
+                      cube17.position.x = -18;
+                      cube17.position.z = 8;
+                      cube17.position.y = 2;
+                      cube18.position.x = -18;
+                      cube18.position.z = -8;
+                      cube18.position.y = 2;
+
+
+
+
+
+                      var geometry3 = new THREE.BoxBufferGeometry( 4, 6, 3 );
+                      var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+                      var cube3 = new THREE.Mesh( geometry3, material );
+                      var cube4 = new THREE.Mesh( geometry3, material );
+                      var cube8 = new THREE.Mesh( geometry3, material );
+                      var cube9 = new THREE.Mesh( geometry3, material );
+                      var cube10 = new THREE.Mesh( geometry3, material );
+                      var cube19 = new THREE.Mesh( geometry3, material );
+                      var cube20 = new THREE.Mesh( geometry3, material );
+                      cube3.position.z = 16;
+                      cube3.position.x = 18;
+                      cube3.position.y = 3;
+                      cube4.position.y = 3;
+                      cube8.position.y = 3;
+                      cube8.position.z = 16;
+                      cube9.position.y = 3;
+                      cube9.position.z = -16;
+                      cube10.position.z = -16;
+                      cube10.position.x = 18;
+                      cube10.position.y = 3;
+                      cube19.position.z = 16;
+                      cube19.position.x = -18;
+                      cube19.position.y = 3;
+                      cube20.position.z = -16;
+                      cube20.position.x = -18;
+                      cube20.position.y = 3;
+
+
+
+
+
+                      var geometry4 = new THREE.BoxBufferGeometry( 16, 4, 3 );
+                      var geometry5 = new THREE.BoxBufferGeometry( 24, 4, 3 );
+                      var material = new THREE.MeshBasicMaterial( {color: 0x0000ff} );
+                      var cube11 = new THREE.Mesh( geometry4, material );
+                      var cube12 = new THREE.Mesh( geometry4, material );
+                      var cube13 = new THREE.Mesh( geometry4, material );
+                      var cube14 = new THREE.Mesh( geometry5, material );
+                      var cube15 = new THREE.Mesh( geometry4, material );
+                      var cube16 = new THREE.Mesh( geometry4, material );
+                      cube11.position.x = 8;
+                      cube11.position.y = 2;
+                      cube12.position.x = 8;
+                      cube12.position.y = 2;
+                      cube12.position.z = 16;
+                      cube13.position.x = 8;
+                      cube13.position.y = 2;
+                      cube13.position.z = -16;
+                      cube14.position.x = -8;
+                      cube14.position.y = 2;
+                      cube15.position.x = -8;
+                      cube15.position.y = 2;
+                      cube15.position.z = 16;
+                      cube16.position.x = -8;
+                      cube16.position.y = 2;
+                      cube16.position.z = -16;
+
+                 
+
+                      var geoCono2 = new THREE.Geometry();
+                      var zTemp = 0;
+                      var seg2 = 100.0;
+                      for( var i = 0; i < seg2; i++){
+                          for( var j = 0; j < seg2; j++){
+                              var punto2 = new THREE.Vector3();
+                              punto2.x = (2 * (seg2 - i) / seg2) * Math.cos( ( j * 2 * Math.PI)/seg2);
+                              punto2.y = 5 * i / seg2;
+                              punto2.z = (2 * (seg2 - i) / seg2) * Math.sin( ( j * 2 * Math.PI)/seg2);
+                              geoCono2.vertices.push( punto2 );
+                          }
+                      }
+                      
+                      var matLine2 = new THREE.LineBasicMaterial( { color: 0x62D963 } );
+                      var tri = new THREE.Line( geoCono2, matLine2); 
+                      tri.position.y = 12;
+                      tri.position.x = -22;
+
+//
+
+                        scene.add( gridHelperXZ );
+                        scene.add( cilindro1 );
+                        scene.add( cilindro2 );
+                        scene.add( cilindro3 );
+                        scene.add( cilindro4 );
+                        scene.add( cilindro5 );
+                        scene.add( cilindro6 );
+                        scene.add( cilindro7 );
+                        scene.add( cilindro8 );
+                        scene.add( cilindro9 );
+                        scene.add( cilindro10 );
+                        scene.add( cilindro11 );
+                        scene.add( cilindro12 );
+                        scene.add( cilindro13 );
+                        scene.add( cilindro14 );
+                        scene.add( cilindro15 );
+                        scene.add( cilindro16 );
+                        scene.add( cilindro17 );
+                        scene.add( cilindro18 );
+                        scene.add( cilindro19 );
+                        scene.add( cilindro20 );
+                        scene.add( cube );
+                        scene.add( cube2 );
+                        scene.add( cube3 );
+                        scene.add( cube4 );
+                        scene.add( cube5 );
+                        scene.add( cube6 );
+                        scene.add( cube7 );
+                        scene.add( cube8 );
+                        scene.add( cube9 );
+                        scene.add( cube10 );
+                        scene.add( cube11 );
+                        scene.add( cube12 );
+                        scene.add( cube13 );
+                        scene.add( cube14 );
+                        scene.add( cube15 );
+                        scene.add( cube16 );
+                        scene.add( cube17 );
+                        scene.add( cube18 );
+                        scene.add( cube19 );
+                        scene.add( cube20 );
+                        scene.add( cube21 );
+                        scene.add( cube22 );
+                        scene.add( cono );
+                        scene.add( cono2 );
+                        scene.add( cono3 );
+                        scene.add( cono4 );
+                        scene.add( cono5 );
+                        scene.add( cono6 );
+                        scene.add( cono7 );
+                        scene.add( cono8 );
+                        scene.add( cono9 );
+                        scene.add( cono10 );
+                        scene.add( cono11 );
+                        scene.add( cono12 );
+                        scene.add( cono13 );
+                        scene.add( cono14 );
+                        scene.add( cono15 );
+                        scene.add( cono16 );
+                        scene.add( cono17 );
+                        scene.add( cono18 );
+                        scene.add( cono19 );
+                        scene.add( cono20 );
+                        scene.add( tri );
+                        
+                        camera.position.x = 5;
+                        camera.position.y = 10;
+                        camera.position.z = 10;
+
+                        camera.lookAt(origin);
+                        }
+                        
+                        
+	              function animate() {
+                                render();
+				requestAnimationFrame( animate );
+                        }         
+
+                      function render(){
+                                var origen = new THREE.Vector3( 0, 0, 0 );
+                                var dtime = Date.now()-startTime;
+                                camera.position.x = 50*Math.cos(dtime/10000);
+                                camera.position.z = 50*Math.sin(dtime/10000);
+                                camera.position.y = 20;
+                                camera.lookAt( origen );
+				renderer.render( scene, camera );
+			}
+		</script><canvas width="1366" height="625" style="width: 1366px; height: 625px;"></canvas>
+	
+</body></html>
